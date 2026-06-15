@@ -9,7 +9,7 @@
  * Idempotent : un fichier inchangé (même hash) est ignoré.
  */
 import { createHash } from "node:crypto";
-import { readdir } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { extname, join, resolve } from "node:path";
 import { config } from "dotenv";
 
@@ -30,12 +30,31 @@ function parseArgs(argv: string[]) {
   return args;
 }
 
+type DocMeta = {
+  title?: string;
+  url?: string;
+  reference?: string;
+  source?: string;
+  domain?: string;
+};
+
+/** Lit un descripteur optionnel `<fichier>.meta.json` à côté du document. */
+async function readMeta(file: string): Promise<DocMeta> {
+  try {
+    const raw = await readFile(`${file}.meta.json`, "utf8");
+    return JSON.parse(raw) as DocMeta;
+  } catch {
+    return {};
+  }
+}
+
 async function listFiles(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
   const files: string[] = [];
   for (const e of entries) {
     const full = join(dir, e.name);
     if (e.isDirectory()) files.push(...(await listFiles(full)));
+    else if (e.name.toLowerCase() === "readme.md") continue; // doc, pas du corpus
     else if (SUPPORTED.has(extname(e.name).toLowerCase())) files.push(full);
   }
   return files;
@@ -63,21 +82,22 @@ async function main() {
   let skipped = 0;
   for (const file of files) {
     console.log(`• ${file}`);
-    const { title, text } = await parseFile(file);
+    const { title: parsedTitle, text } = await parseFile(file);
     if (!text) {
       console.log("  (vide, ignoré)");
       continue;
     }
+    const meta = await readMeta(file);
     const contentHash = createHash("sha256").update(text).digest("hex");
     const docChunks = await chunkText(text);
     console.log(`  ${docChunks.length} chunk(s)`);
 
     const status = await upsertDocument({
-      source,
-      domain,
-      title,
-      url: null,
-      reference: null,
+      source: meta.source ?? source,
+      domain: meta.domain ?? domain,
+      title: meta.title ?? parsedTitle,
+      url: meta.url ?? null,
+      reference: meta.reference ?? null,
       contentHash,
       chunks: docChunks,
     });
