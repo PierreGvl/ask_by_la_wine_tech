@@ -27,19 +27,19 @@ export function ChatShell({
 
       {/* Sidebar mobile (drawer) */}
       {open && (
-        <div className="fixed inset-0 z-40 md:hidden">
-          <button
-            aria-label="Fermer le menu"
-            className="absolute inset-0 bg-black/30"
-            onClick={() => setOpen(false)}
-          />
-          <div className="relative z-50">
+        <div className="fixed inset-0 z-40 flex md:hidden">
+          <div className="relative z-50 w-[280px] shrink-0">
             <Sidebar
               user={user}
               conversations={conversations}
               onNavigate={() => setOpen(false)}
             />
           </div>
+          <button
+            aria-label="Fermer le menu"
+            className="flex-1 bg-black/30"
+            onClick={() => setOpen(false)}
+          />
         </div>
       )}
 
