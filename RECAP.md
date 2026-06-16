@@ -162,7 +162,32 @@ déclarations, le bio et l'information du consommateur.
 
 ---
 
-## 7. Arguments clés pour la commercialisation
+## 7. Pérennité — « et quand les IA sauront tout ? »
+
+Objection légitime : *les LLM ne vont-ils pas bientôt « connaître » tout le
+droit, rendant l'outil inutile ?* Réponse : **non — la valeur tient, parce
+qu'elle ne dépend pas de la puissance du modèle** mais de l'ancrage documentaire.
+
+- **Fraîcheur** : un modèle a une date de coupure ; le droit change en
+  permanence. Ancrer sur un corpus **maintenu** garantit des réponses **à
+  jour** — un problème structurel que « plus de puissance » ne résout pas.
+- **Traçabilité** : en juridique, il faut **citer la source**. Un modèle plus
+  puissant se trompe plus rarement mais de façon **plus crédible** — donc plus
+  dangereuse. La citation vérifiable reste **indispensable**.
+- **Précision de la longue traîne** : récupérer le **texte exact** (un cahier
+  des charges précis, un seuil) bat la mémoire approximative d'un modèle.
+- **Données privées** : ingérer les documents **propres** à un domaine / une
+  coopérative — un LLM générique n'y aura jamais accès.
+
+**Analogie** : les avocats ont un cerveau brillant *et* utilisent Légifrance au
+quotidien. Le LLM = le cerveau ; le RAG = la bibliothèque juridique à jour. On a
+besoin des deux. Et comme l'architecture est **agnostique au modèle**, chaque
+nouveau modèle Mistral **améliore** le produit au lieu de le rendre obsolète.
+
+> En clair : ce qui se banalise, c'est la connaissance *générale* ; ce qui reste
+> précieux, c'est le **socle sourcé, à jour et vérifiable** + la **distribution**.
+
+## 8. Arguments clés pour la commercialisation
 
 - 🇪🇺 **Souverain** : IA française (Mistral), données hébergées en Europe, zéro
   dépendance américaine.
