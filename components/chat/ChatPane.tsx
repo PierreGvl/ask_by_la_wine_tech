@@ -68,9 +68,12 @@ export function ChatPane({
   return (
     <div className="flex h-full flex-col">
       {!isAuthenticated && (
-        <div className="border-b border-line bg-rose-50 px-4 py-2 text-center text-sm text-navy-700">
+        <div className="bg-navy px-4 py-2 text-center text-sm text-white/85">
           Vous discutez en mode invité.{" "}
-          <Link href="/login" className="font-medium text-rose hover:underline">
+          <Link
+            href="/login"
+            className="font-semibold text-rose-100 underline-offset-2 hover:underline"
+          >
             Connectez-vous
           </Link>{" "}
           pour conserver votre historique de conversations.
@@ -128,7 +131,7 @@ export function ChatPane({
             </div>
           </div>
 
-          <div className="border-t border-line bg-white/80 px-4 py-4 backdrop-blur">
+          <div className="border-t border-line bg-rose-50/80 px-4 py-4 backdrop-blur">
             <Composer onSend={handleSend} onStop={stop} busy={busy} />
           </div>
         </>

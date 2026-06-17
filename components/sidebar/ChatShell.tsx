@@ -43,7 +43,7 @@ export function ChatShell({
         </div>
       )}
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col bg-rose-50">
         {/* Barre supérieure mobile */}
         <div className="flex items-center justify-between border-b border-line px-3 py-2 md:hidden">
           <button
