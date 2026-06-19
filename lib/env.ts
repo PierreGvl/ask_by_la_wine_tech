@@ -24,6 +24,11 @@ const envSchema = z.object({
   APP_BASE_DOMAIN: z.string().default("ask.fr"),
   DEFAULT_PROJECT_SLUG: z.string().default("winetech"),
 
+  // Console d'administration sur un hôte dédié (ex. console.obsidio.fr).
+  // Si défini : la console n'est servie QUE sur cet hôte ; /admin renvoie 404
+  // sur les domaines tenants. Si vide : console accessible via /admin partout.
+  CONSOLE_HOST: z.string().optional(),
+
   // Recherche web de secours (souveraine EU). 'none' = désactivée globalement.
   //  - 'brave'   : Brave Search API (BRAVE_API_KEY requis)
   //  - 'searxng' : instance SearxNG auto-hébergée (SEARXNG_URL requis)

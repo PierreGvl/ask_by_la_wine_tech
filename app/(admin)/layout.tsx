@@ -1,14 +1,29 @@
+import { headers } from "next/headers";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { isPlatformAdmin } from "@/lib/admin/guard";
+import { notFound, redirect } from "next/navigation";
+import { requirePlatformAdmin } from "@/lib/admin/guard";
+import { env } from "@/lib/env";
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Console réservée au staff plateforme. On masque son existence sinon.
-  if (!(await isPlatformAdmin())) notFound();
+  // 1) Garde par hôte : si CONSOLE_HOST est défini, la console n'existe QUE là.
+  //    Sur tout autre domaine (tenants), on masque son existence (404).
+  if (env.CONSOLE_HOST) {
+    const h = await headers();
+    const host = (h.get("host") ?? "").split(":")[0].toLowerCase();
+    if (host !== env.CONSOLE_HOST.split(":")[0].toLowerCase()) notFound();
+  }
+
+  // 2) Garde par rôle : non connecté → login ; connecté non-admin → 404.
+  try {
+    await requirePlatformAdmin();
+  } catch (err) {
+    if ((err as Error).message === "UNAUTHENTICATED") redirect("/login");
+    notFound();
+  }
 
   return (
     <div className="flex min-h-screen bg-surface-2 text-ink">
@@ -19,12 +34,6 @@ export default async function AdminLayout({
         <NavLink href="/admin">Tableau de bord</NavLink>
         <NavLink href="/admin/projects">Projets</NavLink>
         <NavLink href="/admin/users">Utilisateurs</NavLink>
-        <Link
-          href="/"
-          className="mt-auto rounded-lg px-3 py-2 text-sm text-faint hover:bg-surface-2"
-        >
-          ← Retour à l&apos;app
-        </Link>
       </aside>
       <main className="flex-1 p-6 sm:p-8">{children}</main>
     </div>
