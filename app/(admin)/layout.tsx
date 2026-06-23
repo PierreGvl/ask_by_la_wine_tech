@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { AdminNav } from "@/components/admin/AdminNav";
+import { ToastProvider } from "@/components/ui/Toast";
 import { requirePlatformAdmin } from "@/lib/admin/guard";
 import { CONSOLE_THEME, isConsoleHost } from "@/lib/console";
 import { env } from "@/lib/env";
@@ -34,12 +35,14 @@ export default async function AdminLayout({
   }
 
   return (
-    <div
-      className="flex min-h-screen flex-col bg-surface-2 text-ink md:flex-row"
-      style={CONSOLE_THEME}
-    >
-      <AdminNav />
-      <main className="flex-1 p-4 sm:p-6">{children}</main>
-    </div>
+    <ToastProvider>
+      <div
+        className="flex min-h-screen flex-col bg-surface-2 text-ink md:flex-row"
+        style={CONSOLE_THEME}
+      >
+        <AdminNav />
+        <main className="flex-1 p-4 sm:p-6">{children}</main>
+      </div>
+    </ToastProvider>
   );
 }

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardBody, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/Table";
+import { ToastForm } from "@/components/ui/ToastForm";
 import { listPlatformAdmins } from "@/lib/admin/platform-admins";
 
 export default async function PlatformAdminsPage() {
@@ -41,9 +42,10 @@ export default async function PlatformAdminsPage() {
                   {new Date(a.createdAt).toLocaleDateString("fr-FR")}
                 </TD>
                 <TD>
-                  <form
+                  <ToastForm
                     action={resetPlatformAdminPasswordAction}
                     className="flex items-center gap-2"
+                    success="Mot de passe réinitialisé"
                   >
                     <input type="hidden" name="id" value={a.id} />
                     <Input
@@ -59,10 +61,14 @@ export default async function PlatformAdminsPage() {
                     >
                       Réinitialiser
                     </button>
-                  </form>
+                  </ToastForm>
                 </TD>
                 <TD className="text-right">
-                  <form action={deletePlatformAdminAction} className="inline">
+                  <ToastForm
+                    action={deletePlatformAdminAction}
+                    className="inline"
+                    success="Admin supprimé"
+                  >
                     <input type="hidden" name="id" value={a.id} />
                     <button
                       type="submit"
@@ -70,7 +76,7 @@ export default async function PlatformAdminsPage() {
                     >
                       Supprimer
                     </button>
-                  </form>
+                  </ToastForm>
                 </TD>
               </TR>
             ))}
@@ -90,9 +96,10 @@ export default async function PlatformAdminsPage() {
           <CardTitle>Nouvel admin console</CardTitle>
         </CardHeader>
         <CardBody>
-          <form
+          <ToastForm
             action={createPlatformAdminAction}
             className="grid gap-3 sm:grid-cols-3"
+            success="Admin créé"
           >
             <label className="flex flex-col gap-1 text-sm">
               <span className="text-faint">Email</span>
@@ -109,7 +116,7 @@ export default async function PlatformAdminsPage() {
             <div className="sm:col-span-3">
               <Button type="submit">Créer l&apos;admin</Button>
             </div>
-          </form>
+          </ToastForm>
         </CardBody>
       </Card>
     </div>

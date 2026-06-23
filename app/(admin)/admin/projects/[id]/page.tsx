@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/Table";
 import { Textarea } from "@/components/ui/Textarea";
+import { ToastForm } from "@/components/ui/ToastForm";
 import {
   getProjectById,
   listApiKeys,
@@ -86,7 +87,11 @@ export default async function ProjectDetail({
   const identityTab = (
     <Card>
       <CardBody>
-        <form action={updateProjectAction} className="grid gap-3 sm:grid-cols-2">
+        <ToastForm
+          action={updateProjectAction}
+          className="grid gap-3 sm:grid-cols-2"
+          success="Projet enregistré"
+        >
           <input type="hidden" name="id" value={project.id} />
           <TextField name="name" label="Nom" defaultValue={project.name} />
           <TextField name="slug" label="Slug" defaultValue={project.slug} />
@@ -184,7 +189,7 @@ export default async function ProjectDetail({
           <div className="sm:col-span-2">
             <Button type="submit">Enregistrer</Button>
           </div>
-        </form>
+        </ToastForm>
       </CardBody>
     </Card>
   );
@@ -234,7 +239,11 @@ export default async function ProjectDetail({
                   </TD>
                   <TD className="text-right">
                     {!isPrivate && (
-                      <form action={unlinkCorpusAction} className="inline">
+                      <ToastForm
+                        action={unlinkCorpusAction}
+                        className="inline"
+                        success="Désabonné"
+                      >
                         <input
                           type="hidden"
                           name="projectId"
@@ -251,7 +260,7 @@ export default async function ProjectDetail({
                         >
                           Désabonner
                         </button>
-                      </form>
+                      </ToastForm>
                     )}
                   </TD>
                 </TR>
@@ -267,9 +276,10 @@ export default async function ProjectDetail({
           </TBody>
         </Table>
         {candidateCorpora.length > 0 && (
-          <form
+          <ToastForm
             action={linkCorpusAction}
             className="flex flex-wrap items-end gap-3 border-t border-line pt-4"
+            success="Abonné au corpus"
           >
             <input type="hidden" name="projectId" value={project.id} />
             <label className="flex flex-col gap-1 text-sm">
@@ -285,7 +295,7 @@ export default async function ProjectDetail({
             <Button type="submit" variant="outline">
               Abonner
             </Button>
-          </form>
+          </ToastForm>
         )}
       </CardBody>
     </Card>
@@ -321,7 +331,11 @@ export default async function ProjectDetail({
                 </TD>
                 <TD className="text-right">
                   {!k.revokedAt && (
-                    <form action={revokeApiKeyAction} className="inline">
+                    <ToastForm
+                      action={revokeApiKeyAction}
+                      className="inline"
+                      success="Clé révoquée"
+                    >
                       <input type="hidden" name="id" value={k.id} />
                       <input type="hidden" name="projectId" value={project.id} />
                       <button
@@ -330,7 +344,7 @@ export default async function ProjectDetail({
                       >
                         Révoquer
                       </button>
-                    </form>
+                    </ToastForm>
                   )}
                 </TD>
               </TR>

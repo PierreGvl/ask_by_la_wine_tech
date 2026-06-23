@@ -7,6 +7,7 @@ import {
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { ToastForm } from "@/components/ui/ToastForm";
 import type { BillingModel, ProjectPlan } from "@/lib/db/schema";
 
 const FEATURES = [
@@ -63,10 +64,10 @@ export function PlansEditor({
           key={plan.id}
           className="flex flex-col gap-3 rounded-lg border border-line p-3"
         >
-          <form
+          <ToastForm
             action={updatePlanAction}
             className="flex flex-col gap-3"
-            id={`plan-${plan.id}`}
+            success="Palier enregistré"
           >
             <input type="hidden" name="id" value={plan.id} />
             <input type="hidden" name="projectId" value={projectId} />
@@ -102,10 +103,10 @@ export function PlansEditor({
                 Enregistrer
               </Button>
             </div>
-          </form>
+          </ToastForm>
           <div className="flex items-center gap-3 border-t border-line pt-2 text-xs">
             {!plan.isDefault && (
-              <form action={setDefaultPlanAction}>
+              <ToastForm action={setDefaultPlanAction} success="Palier par défaut mis à jour">
                 <input type="hidden" name="id" value={plan.id} />
                 <input type="hidden" name="projectId" value={projectId} />
                 <button
@@ -114,25 +115,26 @@ export function PlansEditor({
                 >
                   Définir par défaut
                 </button>
-              </form>
+              </ToastForm>
             )}
             {!plan.isDefault && (
-              <form action={deletePlanAction}>
+              <ToastForm action={deletePlanAction} success="Palier supprimé">
                 <input type="hidden" name="id" value={plan.id} />
                 <input type="hidden" name="projectId" value={projectId} />
                 <button type="submit" className="text-faint hover:text-rose">
                   Supprimer
                 </button>
-              </form>
+              </ToastForm>
             )}
           </div>
         </div>
       ))}
 
       {/* Nouveau palier */}
-      <form
+      <ToastForm
         action={createPlanAction}
         className="flex flex-col gap-3 border-t border-line pt-4"
+        success="Palier ajouté"
       >
         <input type="hidden" name="projectId" value={projectId} />
         <div className="flex flex-wrap items-end gap-3">
@@ -165,7 +167,7 @@ export function PlansEditor({
             Ajouter un palier
           </Button>
         </div>
-      </form>
+      </ToastForm>
     </div>
   );
 }

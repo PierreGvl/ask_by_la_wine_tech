@@ -10,6 +10,7 @@ import { Card, CardBody, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/Table";
+import { ToastForm } from "@/components/ui/ToastForm";
 import {
   corpusReaders,
   corpusStats,
@@ -135,7 +136,11 @@ export default async function CorpusPage() {
                         {fmtDate(s.lastSyncedAt)}
                       </TD>
                       <TD className="whitespace-nowrap text-right">
-                        <form action={resyncDataSourceAction} className="inline">
+                        <ToastForm
+                          action={resyncDataSourceAction}
+                          className="inline"
+                          success="Source marquée à resynchroniser"
+                        >
                           <input type="hidden" name="id" value={s.id} />
                           <button
                             type="submit"
@@ -143,8 +148,12 @@ export default async function CorpusPage() {
                           >
                             Re-sync
                           </button>
-                        </form>
-                        <form action={deleteDataSourceAction} className="inline">
+                        </ToastForm>
+                        <ToastForm
+                          action={deleteDataSourceAction}
+                          className="inline"
+                          success="Source supprimée"
+                        >
                           <input type="hidden" name="id" value={s.id} />
                           <button
                             type="submit"
@@ -152,7 +161,7 @@ export default async function CorpusPage() {
                           >
                             Suppr.
                           </button>
-                        </form>
+                        </ToastForm>
                       </TD>
                     </TR>
                   ))}
@@ -166,9 +175,10 @@ export default async function CorpusPage() {
                 </TBody>
               </Table>
 
-              <form
+              <ToastForm
                 action={createDataSourceAction}
                 className="grid gap-3 border-t border-line pt-4 sm:grid-cols-4"
+                success="Source ajoutée"
               >
                 <input type="hidden" name="corpusId" value={c.id} />
                 <label className="flex flex-col gap-1 text-sm">
@@ -198,7 +208,7 @@ export default async function CorpusPage() {
                     Ajouter une source à ce corpus
                   </Button>
                 </div>
-              </form>
+              </ToastForm>
               <p className="text-xs text-faint">
                 « Re-sync » marque la source à resynchroniser ; l&apos;ingestion
                 réelle est CLI :{" "}
@@ -217,7 +227,11 @@ export default async function CorpusPage() {
           <CardTitle>Nouveau corpus partagé</CardTitle>
         </CardHeader>
         <CardBody>
-          <form action={createCorpusAction} className="grid gap-3 sm:grid-cols-2">
+          <ToastForm
+            action={createCorpusAction}
+            className="grid gap-3 sm:grid-cols-2"
+            success="Corpus créé"
+          >
             <label className="flex flex-col gap-1 text-sm">
               <span className="text-faint">Nom</span>
               <Input
@@ -240,7 +254,7 @@ export default async function CorpusPage() {
             <div className="sm:col-span-2">
               <Button type="submit">Créer le corpus</Button>
             </div>
-          </form>
+          </ToastForm>
         </CardBody>
       </Card>
     </div>
