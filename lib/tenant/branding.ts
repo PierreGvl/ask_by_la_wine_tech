@@ -12,6 +12,8 @@ export type Branding = {
   description: string;
   logoUrl: string;
   faviconUrl: string;
+  /** true → héro sans titre « Bonjour ! », logo agrandi. */
+  heroLogoOnly: boolean;
   greeting: string;
   suggestions: string[];
   /** Absent → le Wordmark rend sa version par défaut figée. */
@@ -26,6 +28,7 @@ export const DEFAULT_BRANDING: Branding = {
   description: DEFAULT_DESCRIPTION,
   logoUrl: "/logo.png",
   faviconUrl: "/icon.png",
+  heroLogoOnly: false,
   greeting: GREETING,
   suggestions: SUGGESTIONS,
   wordmark: null,
@@ -42,6 +45,7 @@ export function getBranding(project: Project | null): Branding {
     description: DEFAULT_DESCRIPTION,
     logoUrl: theme.logoUrl || DEFAULT_BRANDING.logoUrl,
     faviconUrl: theme.faviconUrl || DEFAULT_BRANDING.faviconUrl,
+    heroLogoOnly: theme.heroLogoOnly ?? false,
     greeting: cfg.greeting || DEFAULT_BRANDING.greeting,
     suggestions:
       cfg.suggestions && cfg.suggestions.length

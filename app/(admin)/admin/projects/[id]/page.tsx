@@ -156,6 +156,18 @@ export default async function ProjectDetail({
             defaultValue={cfg.defaultDomain ?? ""}
             placeholder="reglementaire"
           />
+          <label className="flex items-center gap-2 text-sm sm:col-span-2">
+            <input
+              type="checkbox"
+              name="heroLogoOnly"
+              defaultChecked={project.theme?.heroLogoOnly ?? false}
+              className="h-4 w-4 rounded border-line"
+            />
+            <span className="text-faint">
+              Accueil : logo seul (masquer « Bonjour&nbsp;! » et agrandir le
+              logo)
+            </span>
+          </label>
           <AreaField
             name="greeting"
             label="Message d'accueil"

@@ -88,6 +88,7 @@ export async function updateProjectAction(formData: FormData) {
   const theme: ProjectTheme = {
     ...(existing.theme ?? {}),
     colors: Object.keys(colors).length ? colors : existing.theme?.colors,
+    heroLogoOnly: formData.get("heroLogoOnly") === "on",
   };
 
   const suggestions = str(formData.get("suggestions"))

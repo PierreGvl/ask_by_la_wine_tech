@@ -7,6 +7,30 @@ import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 
 const MAX_BYTES = 2 * 1024 * 1024;
+const FAVICON_SIZE = 128;
+
+/**
+ * Recadre une image bitmap en carré PNG (contain, centrée, fond transparent)
+ * pour normaliser un favicon. Les SVG sont retournés tels quels (scalables).
+ */
+async function squarePng(file: File, size: number): Promise<File> {
+  if (file.type === "image/svg+xml") return file;
+  const bitmap = await createImageBitmap(file);
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return file;
+  const scale = Math.min(size / bitmap.width, size / bitmap.height);
+  const w = bitmap.width * scale;
+  const h = bitmap.height * scale;
+  ctx.drawImage(bitmap, (size - w) / 2, (size - h) / 2, w, h);
+  const blob = await new Promise<Blob | null>((res) =>
+    canvas.toBlob(res, "image/png"),
+  );
+  bitmap.close();
+  return blob ? new File([blob], "favicon.png", { type: "image/png" }) : file;
+}
 
 /**
  * Téléversement d'un asset image d'un projet (logo ou favicon), stocké en base
@@ -53,6 +77,13 @@ export function AssetUploader({
   function submit(formData: FormData) {
     start(async () => {
       try {
+        // Favicon : on normalise en carré PNG côté client avant l'envoi.
+        if (kind === "favicon") {
+          const f = formData.get("file");
+          if (f instanceof File && f.size > 0) {
+            formData.set("file", await squarePng(f, FAVICON_SIZE));
+          }
+        }
         const res = await uploadProjectImageAction(formData);
         if (res.ok) {
           show(
