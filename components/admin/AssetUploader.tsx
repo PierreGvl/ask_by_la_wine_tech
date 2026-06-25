@@ -53,15 +53,20 @@ export function AssetUploader({
   function submit(formData: FormData) {
     start(async () => {
       try {
-        await uploadProjectImageAction(formData);
-        show(
-          kind === "favicon" ? "Favicon mis à jour" : "Logo mis à jour",
-          "ok",
-        );
-        setPreview(null);
-        setHasFile(false);
+        const res = await uploadProjectImageAction(formData);
+        if (res.ok) {
+          show(
+            kind === "favicon" ? "Favicon mis à jour" : "Logo mis à jour",
+            "ok",
+          );
+          setPreview(null);
+          setHasFile(false);
+        } else {
+          show(res.error, "err");
+        }
       } catch {
-        show("Échec du téléversement.", "err");
+        // Rejet niveau framework (ex. taille de body Server Action dépassée).
+        show("Téléversement refusé (fichier trop volumineux ?).", "err");
       }
     });
   }

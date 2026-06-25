@@ -127,33 +127,43 @@ const MAX_ASSET_BYTES = 2 * 1024 * 1024; // 2 Mo
  * pointe le champ de thème correspondant (logoUrl/faviconUrl) vers la route
  * /api/assets avec un cache-bust `?v=`.
  */
-export async function uploadProjectImageAction(formData: FormData) {
-  await requirePlatformAdmin();
-  const projectId = str(formData.get("projectId"));
-  const kind = str(formData.get("kind")) === "favicon" ? "favicon" : "logo";
-  const label = kind === "favicon" ? "Le favicon" : "Le logo";
-  const file = formData.get("file");
-  if (!(file instanceof File) || file.size === 0) {
-    throw new Error("Fichier requis.");
-  }
-  if (!file.type.startsWith("image/")) {
-    throw new Error(`${label} doit être une image.`);
-  }
-  if (file.size > MAX_ASSET_BYTES) {
-    throw new Error(`${label} est trop lourd (max 2 Mo).`);
-  }
-  const project = await q.getProjectById(projectId);
-  if (!project) throw new Error("projet introuvable");
+export async function uploadProjectImageAction(
+  formData: FormData,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  try {
+    await requirePlatformAdmin();
+    const projectId = str(formData.get("projectId"));
+    const kind = str(formData.get("kind")) === "favicon" ? "favicon" : "logo";
+    const label = kind === "favicon" ? "Le favicon" : "Le logo";
+    const file = formData.get("file");
+    if (!(file instanceof File) || file.size === 0) {
+      return { ok: false, error: "Fichier requis." };
+    }
+    if (!file.type.startsWith("image/")) {
+      return { ok: false, error: `${label} doit être une image.` };
+    }
+    if (file.size > MAX_ASSET_BYTES) {
+      return { ok: false, error: `${label} est trop lourd (max 2 Mo).` };
+    }
+    const project = await q.getProjectById(projectId);
+    if (!project) return { ok: false, error: "Projet introuvable." };
 
-  const bytes = Buffer.from(await file.arrayBuffer());
-  await q.upsertProjectAsset({ projectId, kind, mime: file.type, bytes });
-  // `?v=` (mtime) force le rafraîchissement des caches navigateur/Image.
-  const url = `/api/assets/${projectId}/${kind}?v=${Date.now()}`;
-  const themeKey = kind === "favicon" ? "faviconUrl" : "logoUrl";
-  await q.updateProject(projectId, {
-    theme: { ...(project.theme ?? {}), [themeKey]: url },
-  });
-  revalidatePath(`/admin/projects/${projectId}`);
+    const bytes = Buffer.from(await file.arrayBuffer());
+    await q.upsertProjectAsset({ projectId, kind, mime: file.type, bytes });
+    // `?v=` (mtime) force le rafraîchissement des caches navigateur/Image.
+    const url = `/api/assets/${projectId}/${kind}?v=${Date.now()}`;
+    const themeKey = kind === "favicon" ? "faviconUrl" : "logoUrl";
+    await q.updateProject(projectId, {
+      theme: { ...(project.theme ?? {}), [themeKey]: url },
+    });
+    revalidatePath(`/admin/projects/${projectId}`);
+    return { ok: true };
+  } catch (err) {
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : "Erreur inattendue.",
+    };
+  }
 }
 
 export async function deleteProjectAction(formData: FormData) {
