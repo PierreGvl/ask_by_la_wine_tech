@@ -5,11 +5,15 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 
-config({ path: ".env" });
+// Fichier d'env ciblé : 1er argument CLI (ex. `.env.prod.local`) sinon `.env`.
+// Permet de migrer explicitement la prod : `tsx scripts/migrate.ts .env.prod.local`.
+const envPath = process.argv[2] || ".env";
+config({ path: envPath });
+console.log(`▸ Migration via ${envPath}`);
 
 const url = process.env.DATABASE_URL;
 if (!url) {
-  console.error("DATABASE_URL manquant.");
+  console.error(`DATABASE_URL manquant (fichier ${envPath}).`);
   process.exit(1);
 }
 
