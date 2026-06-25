@@ -24,6 +24,7 @@ const SUGGESTIONS = [
   "Quels documents pour une expédition intracommunautaire ?",
   "Comment remplir une déclaration d'accises ?",
   "Quelles mentions obligatoires sur un DAE ?",
+  "Quelles démarches pour exporter du vin hors UE ?",
 ];
 
 async function main() {
