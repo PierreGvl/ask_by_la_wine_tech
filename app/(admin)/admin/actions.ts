@@ -78,7 +78,8 @@ export async function updateProjectAction(formData: FormData) {
   const existing = await q.getProjectById(id);
   if (!existing) throw new Error("projet introuvable");
 
-  // Theme : on préserve le wordmark existant, on met à jour couleurs + logo.
+  // Theme : on met à jour les couleurs ; logo/favicon/wordmark sont gérés
+  // ailleurs (uploaders) et préservés par le spread de l'existant.
   const colors: Record<string, string> = {};
   for (const key of ["navy", "rose", "roseLight"]) {
     const v = str(formData.get(`color_${key}`));
@@ -87,7 +88,6 @@ export async function updateProjectAction(formData: FormData) {
   const theme: ProjectTheme = {
     ...(existing.theme ?? {}),
     colors: Object.keys(colors).length ? colors : existing.theme?.colors,
-    logoUrl: str(formData.get("logoUrl")) || existing.theme?.logoUrl || null,
   };
 
   const suggestions = str(formData.get("suggestions"))

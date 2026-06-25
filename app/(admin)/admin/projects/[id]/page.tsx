@@ -173,12 +173,6 @@ export default async function ProjectDetail({
             placeholder="#eff6ff"
           />
           <TextField
-            name="logoUrl"
-            label="URL du logo (rempli par le téléversement, ou URL externe)"
-            defaultValue={project.theme?.logoUrl ?? ""}
-            placeholder="/logo.png"
-          />
-          <TextField
             name="defaultDomain"
             label="Sous-corpus par défaut"
             defaultValue={cfg.defaultDomain ?? ""}
